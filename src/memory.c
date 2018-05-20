@@ -3,8 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int16_t memory[MEM_SIZE] = {0};
-static char    memorycode[MEM_SIZE][128];
+static int16_t          memory[MEM_SIZE] = {0};
+static char             memorycode[MEM_SIZE][128];
+static struct pcstack_t pcstack;
 
 enum errorcode_t set_mem(uint32_t addr, uint32_t value) {
     if(addr > MEM_SIZE)
@@ -91,7 +92,6 @@ enum errorcode_t parse_arg_string(const char *str, uint32_t *addr, int16_t *val)
 
 enum errorcode_t get_regdest_val(uint32_t *addr, int16_t *val, char *src, char *dest) {
     uint32_t regdest = 0;
-    uint32_t regsrc = 0;
 
     enum errorcode_t err;
 
@@ -102,21 +102,7 @@ enum errorcode_t get_regdest_val(uint32_t *addr, int16_t *val, char *src, char *
     err = parse_arg_string(dest, &regdest, NULL);
 
     if(err != SUCCESS) return err;
-/*
-    if(dest[0] == '['){
-        if(dest[strlen(dest)-2] == ']')
-            return MISSING_RIGHTBRACKET;
 
-        char tmp[strlen(dest)];
-
-        strncpy(tmp, (dest+1), strlen(dest)-2);
-
-        regdest = atoi(tmp) + N_REGISTERS;
-    }
-    else {
-        regdest = get_index_reg(dest);
-    }
-*/
     if(addr != NULL)
         *addr = regdest;
     
@@ -145,4 +131,20 @@ uint32_t get_index_reg(const char *regname) {
 void set_memorycode(const char *line, uint32_t index) {
     if(index < MEM_SIZE)
         strcpy(memorycode[index], line);
+}
+
+enum errorcode_t push_pc_stack(uint32_t pc) {
+    if(pcstack.index + 1 >= 256) return PCOVERFLOW;
+
+    pcstack.mem[pcstack.index++] = pc;
+    
+    return SUCCESS;
+}
+
+enum errorcode_t pop_pc_stack(uint32_t *pc) {
+    if(pcstack.index <= 0) return PCOVERFLOW;
+
+    *pc = pcstack.mem[--pcstack.index];
+
+    return SUCCESS;
 }

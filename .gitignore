@@ -1,4 +1,2 @@
-obj/builtin.o
-obj/main.o
-obj/memory.o
+obj/*.o
 .vscode/settings.json

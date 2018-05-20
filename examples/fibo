@@ -1,26 +1,22 @@
-move #0,R1 
+move #0,R1
 move #1,R2
 move #0,R3
-move #20,R4
-move #0,R5
+move #0,R4
+move #20,R5
+
+call fibo
+rets
 
 fibo:
-cmp R3,R4
-jge label1
-jra label4
+    sub #1,R5
+    move R1,R3
+    add R2,R3
+    move R2,R1
+    move R3,R2
 
-label2:
-add R1,R5
-add R2,R5
-move R2,R1
-move R5,R2
-print R1
-move #0,R5
-jra fibo
+    print R1
 
-label1:
-add #1,R3
-jra label2
-
-label4:
-ret
+    cmp R5,#1
+    jg fibo
+    
+    ret

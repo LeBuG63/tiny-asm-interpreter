@@ -49,7 +49,6 @@ enum errorcode_t builtin_move(char *src, char *dest, uint32_t *pc) {
 
     uint32_t    addr;
     int16_t     val;
-    int16_t     tmp;
 
     enum errorcode_t err;
 
@@ -101,7 +100,6 @@ enum errorcode_t builtin_cmp(char *arg1, char *arg2, uint32_t *pc) {
     (void)pc;
 
     int16_t     val;
-    int16_t     tmp;
 
     enum errorcode_t err;
 
@@ -125,34 +123,91 @@ enum errorcode_t builtin_cmp(char *arg1, char *arg2, uint32_t *pc) {
 enum errorcode_t builtin_jge(char *arg1, char *arg2, uint32_t *pc) {
     (void)arg2;
 
+    int16_t val = val_cmp();
+
+    return condition(val == 0 || val == 2, arg1, pc);
+}
+
+enum errorcode_t builtin_jle(char *arg1, char *arg2, uint32_t *pc) {
+    (void)arg2;
+
+    int16_t val = val_cmp();
+
+    return condition(val == 0 || val == 1, arg1, pc);
+}
+
+enum errorcode_t builtin_jl(char *arg1, char *arg2, uint32_t *pc) {
+    (void)arg2;
+
+    int16_t val = val_cmp();
+
+    return condition(val == 1, arg1, pc);
+}
+
+enum errorcode_t builtin_jg(char *arg1, char *arg2, uint32_t *pc) {
+    (void)arg2;
+
+    int16_t val = val_cmp();
+
+    return condition(val == 2, arg1, pc);
+}
+
+enum errorcode_t builtin_jmp(char *arg1, char *arg2, uint32_t *pc) {
+    (void)arg2;
+
+    enum errorcode_t err = search_label_and_jump(pc, arg1);
+    
+    return err;
+}
+
+enum errorcode_t builtin_call(char *arg1, char *arg2, uint32_t *pc) {
+    (void)arg2;
+
+    enum errorcode_t err = push_pc_stack(*pc);
+    
+    if(err == SUCCESS) {
+        err = builtin_jmp(arg1, arg2, pc);
+    }
+
+    return err;
+}
+
+enum errorcode_t builtin_ret(char *arg1, char *arg2, uint32_t *pc) {
+    (void)arg1;
+    (void)arg2;
+    
+    pop_pc_stack(pc);
+
+    return SUCCESS;
+}
+
+int16_t val_cmp(void) {
+    int16_t val;
+    
+    parse_arg_string("CMP", NULL, &val);
+    
+    return val;
+} 
+
+enum errorcode_t condition(bool cond, const char *arg1, uint32_t *pc) {
     int16_t val;
 
     enum errorcode_t err;
 
     err = get_value_memory(&val, get_index_reg("CMP"));
     
-    if(val <= 1 && err == SUCCESS) {
-        for(int i = 0; labels[i].name[0] != '\0'; ++i) {
-            if(strcmp(labels[i].name, arg1) == 0) {
-                *pc = labels[i].pc;
-                return SUCCESS;
-            }
-        }
+    if((cond) && err == SUCCESS) {
+        err = push_pc_stack(*pc);
+        if(err != SUCCESS)
+            return err;
+
+        err = search_label_and_jump(pc, arg1);
+
+        if(err == SUCCESS)
+            return SUCCESS;
+
         return NOLABEL;
     }
     
     return err;
-}
-
-enum errorcode_t builtin_jra(char *arg1, char *arg2, uint32_t *pc) {
-    (void)arg2;
-
-    for(int i = 0; labels[i].name[0] != '\0'; ++i) {
-        if(strcmp(labels[i].name, arg1) == 0) {
-            *pc = labels[i].pc;
-            return SUCCESS;
-        }
-    }
-
-    return NOLABEL;
 }

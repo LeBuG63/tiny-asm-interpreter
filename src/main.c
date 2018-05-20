@@ -15,7 +15,8 @@ const char *error_msg[] = {
     "",
     "Missing bracket: line %d\n",
     "Out of bounds: line %d\n",
-    "Label doesn't exist: line %d"
+    "Label doesn't exist: line %d",
+    "PC Overflow"
 };
 
 struct ptrfunc_t builtin_function[] = {
@@ -25,9 +26,13 @@ struct ptrfunc_t builtin_function[] = {
     {"MOVE", builtin_move},
     {"CMP", builtin_cmp},
     {"JGE", builtin_jge},
-    {"JRA", builtin_jra}
+    {"JRA", builtin_jmp},
+    {"RET", builtin_ret},
+    {"JLE", builtin_jle},
+    {"JL",  builtin_jl},
+    {"JG",  builtin_jg},
+    {"CALL", builtin_call}
 };
-
 
 int main(int argc, char *argv[]) {
     (void)argc;
@@ -44,20 +49,39 @@ int main(int argc, char *argv[]) {
     char line[128] = {0};
     
     while(!feof(fp)) {
+        int  i = 0;
+        int  k = 0;
+        int  j = 0;
+        char formatedline[128] = {0};
+
         fgets(line, 128, fp);
 
         line[strlen(line) - 1] = '\0';
 
-        for(int i = 0; line[i] != '\0'; ++i) {
-            while((line[i] == ' ' && line[i + 1] == ' ') || (line[i] == '\t'))
+        for(i = 0; isspace(line[i]); ++i)
+            ;
+
+        for(j = strlen(line)-1; isspace(line[j]); --j)
+            ;
+
+        line[j+1] = '\0';
+
+        if(line[0] == '\0') continue;
+
+        for(k = 0; line[i] != '\0'; ++i, ++k) {
+            while(isspace(line[i]) && isspace(line[i + 1]))
                 ++i;
-            line[i] = toupper(line[i]);
+            formatedline[k] = toupper(line[i]);
         }
 
-        set_memorycode(line, pc);
+        formatedline[strlen(formatedline)] = '\0';
+        if(formatedline[0] == ';') continue;
+        
+        set_memorycode(formatedline, pc);
 
-        if(line[strlen(line) - 1] == ':') {
-            strncpy(labels[nlabel].name, line, strlen(line) - 1);
+        if(formatedline[strlen(formatedline) - 1] == ':') {
+            strncpy(labels[nlabel].name, formatedline, strlen(formatedline) - 1);
+            
             labels[nlabel].pc = pc;
             ++nlabel;
         }
@@ -69,10 +93,10 @@ int main(int argc, char *argv[]) {
     uint32_t            end = pc - 1;
     pc = 0;
 
-    while(pc != end && err == SUCCESS) {
+    while(pc <= end && err == SUCCESS) {
         struct token_t  *tok = read_from_memcode(pc);
 
-        if(strcmp(tok->insname, "RET") == 0)
+        if(strcmp(tok->insname, "RETS") == 0)
             break;
 
         for(int i = 0; i < N_FUNCTIONS; ++i) {
@@ -80,12 +104,15 @@ int main(int argc, char *argv[]) {
                 err = builtin_function[i].func(tok->src, tok->dest, &pc);
             }
         }
+
         free(tok);
+
+        
+        pc++;
 
         if(err != SUCCESS) {
             printf(error_msg[err], pc + 1);
         }
-        pc++;
     }
 
     return 0;

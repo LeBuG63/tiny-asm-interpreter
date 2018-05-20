@@ -1,0 +1,27 @@
+move #16,R1
+move #10,R2
+
+; on multiplie les deux registres
+call mul
+print R1
+rets
+
+; fonction qui multiplie le registre R1 avec le registre R2
+mul:
+   ; le compteur est initialise a 1
+   move #1,R3
+   move R1,R4
+   ; boucle permettant de compter R2 fois
+   cptr:   
+   add R4,R1
+   
+   ; on ajoute 1 au compteur
+   add #1,R3
+   
+   ; si le compteur est plus petit que R2 alors on refait un tour de boucle
+   cmp R3,R2
+   jl cptr
+   ; sinon on quitte la fonction
+   ret
+
+     
