@@ -18,7 +18,7 @@ Pour créer une fonction, il suffit de faire comme un label, puis à la fin de l
 Un commentaire commence par `;`. Il ne peut pas encore être placé la même ligne qu'une instruction.
 
 Commandes:
-  - `stock <src><dest>` dest prend la valeur src
+  - `move <src><dest>` dest prend la valeur src
   - `add <src><dest>` ajoute src dans dest 
   - `sub <src><dest>` soustrait dest à src et le stock dans dest
   - `cmp <arg1><arg2>` compare arg1 à arg2
