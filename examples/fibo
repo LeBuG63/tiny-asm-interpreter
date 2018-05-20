@@ -1,0 +1,26 @@
+store #0,R1 
+store #1,R2
+store #0,R3
+store #20,R4
+store #0,R5
+
+fibo:
+cmp R3,R4
+jge label1
+jra label4
+
+label2:
+add R1,R5
+add R2,R5
+store R2,R1
+store R5,R2
+print R1
+store #0,R5
+jra fibo
+
+label1:
+add #1,R3
+jra label2
+
+label4:
+ret
