@@ -27,7 +27,7 @@ Commandes:
   - `jle <label>` saute au label indiqué si arg1 est plus petit ou égale à arg2
   - `jl <label>` saute au label indiqué si arg1 est plus petit à arg2
   - `jmp <label>` saute au label indiqué
-  - `call <func>` saute à la fonction
+  - `call <func>` saute à la fonction indiquée
   - `print <src>` affiche le nombre stocké à l'emplacement src
   - `rets` quitte le programme
   
