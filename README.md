@@ -15,7 +15,7 @@ Pour acceder un espace mémoire, il suffit de faire: [x], où x represente l'emp
 
   
 Commandes:
-  - `stock <src><dest>` dest prend la valeur src
+  - `move <src><dest>` dest prend la valeur src
   - `add <src><dest>` ajoute src dans dest 
   - `sub <src><dest>` soustrait dest à src et le stock dans dest
   - `cmp <arg1><arg2>` compare arg1 à arg2
