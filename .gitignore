@@ -1,0 +1,4 @@
+obj/builtin.o
+obj/main.o
+obj/memory.o
+.vscode/settings.json

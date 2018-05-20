@@ -1,8 +1,8 @@
-store #0,R1 
-store #1,R2
-store #0,R3
-store #20,R4
-store #0,R5
+move #0,R1 
+move #1,R2
+move #0,R3
+move #20,R4
+move #0,R5
 
 fibo:
 cmp R3,R4
@@ -12,10 +12,10 @@ jra label4
 label2:
 add R1,R5
 add R2,R5
-store R2,R1
-store R5,R2
+move R2,R1
+move R5,R2
 print R1
-store #0,R5
+move #0,R5
 jra fibo
 
 label1:

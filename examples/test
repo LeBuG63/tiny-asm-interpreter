@@ -1,0 +1,18 @@
+move #100,R1
+move #1,R2
+move #0,R3
+print R1
+print R2
+print R3
+add #10,R1
+cmp R1,#10
+jge label
+jra label1
+
+label1:
+print R2
+ret
+
+label:
+print R3
+ret
