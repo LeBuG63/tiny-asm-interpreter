@@ -35,7 +35,8 @@ struct ptrfunc_t builtin_function[] = {
     {"JL",  builtin_jl},
     {"JG",  builtin_jg},
     {"CALL", builtin_call},
-    {"PRINTC", builtin_prtc}
+    {"PRINTC", builtin_prtc},
+    {"PRINTS", builtin_prts}
 };
 
 enum errorcode_t read_file(FILE *fp) {

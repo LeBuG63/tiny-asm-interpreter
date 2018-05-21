@@ -107,7 +107,7 @@ enum errorcode_t builtin_prtc(char *src, char *dest, uint32_t *pc) {
         
         if(ret != SUCCESS)
             return ret;
-            
+
         printf("%c", val);
     }
     else {
@@ -123,10 +123,39 @@ enum errorcode_t builtin_prtc(char *src, char *dest, uint32_t *pc) {
         printf("%c", val);
     }
 
-
-
     return SUCCESS;
 }
+
+enum errorcode_t builtin_prts(char *src, char *dest, uint32_t *pc) {
+    (void)pc;
+    (void)src;
+
+    uint32_t begaddr = 0;
+    uint32_t endaddr = 0;
+
+    enum errorcode_t err;
+
+    err = parse_arg_string(src, &begaddr, NULL);
+
+    if(err != SUCCESS)
+        return err;
+
+    err = parse_arg_string(dest, &endaddr, NULL);
+    
+    if(err != SUCCESS)
+        return err;
+
+    for(uint32_t i = begaddr; i <= endaddr && err == SUCCESS; ++i)  {
+        int16_t val = 0;
+        err = get_value_memory(&val, i);
+        
+        if(err == SUCCESS)
+            putchar((char)val);
+    }
+
+    return err;
+}
+
 
 
 enum errorcode_t builtin_cmp(char *arg1, char *arg2, uint32_t *pc) { 
