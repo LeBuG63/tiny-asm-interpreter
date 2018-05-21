@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 static int16_t          memory[MEM_SIZE] = {0};
 static char             memorycode[MEM_SIZE][128];
@@ -26,7 +27,7 @@ enum errorcode_t  get_value_memory(int16_t *val, uint32_t addr) {
 }
 
 struct token_t *read_from_memcode(uint32_t src) {
-    if(src > MEM_SIZE) 
+    if(src >= MEM_SIZE) 
         return NULL;
 
     struct token_t  *token = malloc(sizeof(struct token_t));
@@ -60,8 +61,16 @@ struct token_t *read_from_memcode(uint32_t src) {
 
     return token;
 }
+char *read_line_memcode(uint32_t src) {
+    if(src >= MEM_SIZE)
+        return NULL;
+
+    return memorycode[src];
+}
 
 enum errorcode_t parse_arg_string(const char *str, uint32_t *addr, int16_t *val) {
+    enum errorcode_t err = SUCCESS;
+    
     if(str[0] == '#') {
         *val = (int16_t)atoi((str + 1));
     }
@@ -78,16 +87,22 @@ enum errorcode_t parse_arg_string(const char *str, uint32_t *addr, int16_t *val)
 
         if(val != NULL)
             *val = memory[*addr + N_REGISTERS];
-    }
-    else if(str != NULL) {
-        if(val != NULL)
-            *val = memory[get_index_reg(str)];
 
+
+    }
+    else if(str != NULL && isalpha(str[0])) {
+        if(val != NULL) {
+            uint32_t reg;
+
+            err = get_index_reg(str, &reg);
+
+            *val = memory[reg];
+        }
         if(addr != NULL)
-            *addr = get_index_reg(str);
+            err = get_index_reg(str, addr);
     }
 
-    return SUCCESS;
+    return err;
 }
 
 enum errorcode_t get_regdest_val(uint32_t *addr, int16_t *val, char *src, char *dest) {
@@ -109,7 +124,7 @@ enum errorcode_t get_regdest_val(uint32_t *addr, int16_t *val, char *src, char *
     return SUCCESS;
 }
 
-uint32_t get_index_reg(const char *regname) {
+enum errorcode_t get_index_reg(const char *regname, uint32_t *reg) {
     static const char *table[N_REGISTERS] = {
         "R1",
         "R2",
@@ -121,11 +136,13 @@ uint32_t get_index_reg(const char *regname) {
     };
 
     for(uint32_t i = 0; i < N_REGISTERS; ++i) {
-        if(strcmp(table[i], regname) == 0)
-            return i;
+        if(strcmp(table[i], regname) == 0) {
+            *reg = i;
+            return SUCCESS;
+        }
     }
 
-    return -1;
+    return BADREGISTER;
 } 
 
 void set_memorycode(const char *line, uint32_t index) {

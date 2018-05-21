@@ -13,7 +13,10 @@ enum errorcode_t {
     MISSING_RIGHTBRACKET,
     OUTOFBOUNDS,
     NOLABEL,
-    PCOVERFLOW
+    PCOVERFLOW,
+    BADARGUMENT,
+    BADREGISTER,
+    NORETS
 };
 
 struct token_t {
@@ -30,9 +33,11 @@ struct pcstack_t {
 
 enum errorcode_t    set_mem(uint32_t addr, uint32_t value);
 enum errorcode_t    get_value_memory(int16_t *val, uint32_t addr);
-uint32_t            get_index_reg(const char *regname);
+enum errorcode_t    get_index_reg(const char *regname, uint32_t *reg) ;
 
 struct token_t      *read_from_memcode(uint32_t src);
+char                *read_line_memcode(uint32_t src);
+
 enum errorcode_t    get_regdest_val(uint32_t *addr, int16_t *val, char *src, char *dest);
 
 enum errorcode_t    parse_arg_string(const char *str, uint32_t *addr, int16_t *val);

@@ -65,15 +65,13 @@ enum errorcode_t builtin_prt(char *src, char *dest, uint32_t *pc) {
     (void)pc;
     (void)src;
 
-    int vdest = 0;
+    uint32_t vdest = 0;
 
     if(isalpha(src[0])) {
-        vdest = get_index_reg(src);
-        
         int16_t val;
 
         enum errorcode_t ret = get_value_memory(&val, vdest);
-
+        
         if(ret != SUCCESS)
             return ret;
 
@@ -96,6 +94,41 @@ enum errorcode_t builtin_prt(char *src, char *dest, uint32_t *pc) {
     return SUCCESS;
 }
 
+enum errorcode_t builtin_prtc(char *src, char *dest, uint32_t *pc) {
+    (void)pc;
+    (void)src;
+
+    uint32_t vdest = 0;
+
+    if(isalpha(src[0])) {
+        int16_t val;
+
+        enum errorcode_t ret = get_value_memory(&val, vdest);
+        
+        if(ret != SUCCESS)
+            return ret;
+            
+        printf("%c", val);
+    }
+    else {
+        vdest = (uint16_t)atoi(dest) + N_REGISTERS;
+
+        int16_t val;
+
+        enum errorcode_t ret = get_value_memory(&val, vdest);
+
+        if(ret != SUCCESS)
+            return ret;
+
+        printf("%c", val);
+    }
+
+
+
+    return SUCCESS;
+}
+
+
 enum errorcode_t builtin_cmp(char *arg1, char *arg2, uint32_t *pc) { 
     (void)pc;
 
@@ -108,7 +141,12 @@ enum errorcode_t builtin_cmp(char *arg1, char *arg2, uint32_t *pc) {
     if(err == SUCCESS) {
         int16_t     val1;
 
-        uint32_t addrcmp = get_index_reg("CMP");
+        uint32_t addrcmp;
+        
+        err = get_index_reg("CMP", &addrcmp);
+        
+        if(err != SUCCESS)
+            return err;
 
         err = parse_arg_string(arg1, NULL, &val1);
 
@@ -190,11 +228,17 @@ int16_t val_cmp(void) {
 } 
 
 enum errorcode_t condition(bool cond, const char *arg1, uint32_t *pc) {
-    int16_t val;
+    int16_t     val;
+    uint32_t    addr;
 
     enum errorcode_t err;
 
-    err = get_value_memory(&val, get_index_reg("CMP"));
+    err = get_index_reg("CMP", &addr);
+
+    if(err != SUCCESS)
+        return err;
+
+    err = get_value_memory(&val, addr);
     
     if((cond) && err == SUCCESS) {
         err = push_pc_stack(*pc);

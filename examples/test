@@ -1,5 +1,5 @@
 move #10,R1
-jra label
+call label
 print R1
 rets
 
