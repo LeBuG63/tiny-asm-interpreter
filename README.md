@@ -33,8 +33,6 @@ Commandes:
   - `prints <start>,<end>` affiche une série de caractères à l'emplacement start jusqu'à l'emplacement end
   - `rets` quitte le programme
   
-Les commentaires ne sont pas encore supporés.
-  
 Exemple d'un programme, la suite de Fibonacci:
 ``` 
 move #0,R1
