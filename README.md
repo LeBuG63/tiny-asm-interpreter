@@ -1,4 +1,4 @@
-# tiny-asm-interpreter
+# tiny asm interpreter
 (Travail en cours)
 
 Un intépreteur d'un langage d'assembleur fortement simplifié.
@@ -30,7 +30,7 @@ Commandes:
   - `call <func>` saute à la fonction indiquée
   - `print <src>` affiche le nombre stocké à l'emplacement src
   - `printc <src>` affiche le caractère stocké à l'emplacement src
-  - `prints <start>,<end>` affiche une série de caractères à l'emplacement <start> jusqu'à l'emplacement end
+  - `prints <start>,<end>` affiche une série de caractères à l'emplacement start jusqu'à l'emplacement end
   - `rets` quitte le programme
   
 Les commentaires ne sont pas encore supporés.
