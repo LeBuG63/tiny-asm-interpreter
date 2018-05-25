@@ -5,7 +5,7 @@
 
 #include "memory.h"
 
-#define N_FUNCTIONS     14
+#define N_FUNCTIONS     16
 
 struct ptrfunc_t {
     char *name;
@@ -18,6 +18,8 @@ enum errorcode_t builtin_prt(char *src, char *dest, uint32_t *);
 enum errorcode_t builtin_prtc(char *src, char *dest, uint32_t *pc);
 enum errorcode_t builtin_prts(char *arg1, char *arg2, uint32_t *pc);
 enum errorcode_t builtin_move(char *src, char *dest, uint32_t *);
+enum errorcode_t builtin_askc(char *arg1, char *arg2, uint32_t *pc);
+enum errorcode_t builtin_aski(char *arg1, char *arg2, uint32_t *pc);
 enum errorcode_t builtin_cmp(char *arg1, char *arg2, uint32_t *);
 enum errorcode_t builtin_jge(char *arg1, char *arg2, uint32_t *);
 enum errorcode_t builtin_jmp(char *arg1, char *arg2, uint32_t *);

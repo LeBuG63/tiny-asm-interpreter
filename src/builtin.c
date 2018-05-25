@@ -187,6 +187,51 @@ enum errorcode_t builtin_cmp(char *arg1, char *arg2, uint32_t *pc) {
     return err;
 }
 
+
+enum errorcode_t builtin_aski(char *arg1, char *arg2, uint32_t *pc) {
+    (void)arg2;
+    (void)pc;
+    
+    enum errorcode_t err;
+
+    uint32_t    addr = 0;
+    int16_t     val = 0;
+
+    err = parse_arg_string(arg1, &addr, NULL);
+
+    if(err != SUCCESS)
+        return err;
+
+    putchar('?');
+    scanf("%hi", &val);
+
+    err = set_mem(addr, val);
+
+    return err;
+}
+
+enum errorcode_t builtin_askc(char *arg1, char *arg2, uint32_t *pc) {
+    (void)arg2;
+    (void)pc;
+
+    enum errorcode_t err;
+
+    uint32_t    addr = 0;
+    char        val = 0;
+
+    err = parse_arg_string(arg1, &addr, NULL);
+
+    if(err != SUCCESS)
+        return err;
+
+    putchar('?');
+    scanf("%c", &val);
+
+    err = set_mem(addr, (int16_t)val);
+
+    return err;
+}
+
 enum errorcode_t builtin_jge(char *arg1, char *arg2, uint32_t *pc) {
     (void)arg2;
 

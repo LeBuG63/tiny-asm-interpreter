@@ -29,6 +29,8 @@ Commandes:
   - `jmp <label>` saute au label indiqué
   - `call <func>` saute à la fonction indiquée
   - `print <src>` affiche le nombre stocké à l'emplacement src
+  - `aski <src>` demande un entier à l'utilisateur et le stock dans src
+  - `askc <src>` demande un caractère à l'utilisateur et le stock dans src
   - `rets` quitte le programme
   
 Les commentaires ne sont pas encore supporés.
