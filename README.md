@@ -1,4 +1,4 @@
-# tiny-asm-interpreter
+# tiny asm interpreter
 (Travail en cours)
 
 Un intépreteur d'un langage d'assembleur fortement simplifié.
@@ -18,10 +18,10 @@ Pour créer une fonction, il suffit de faire comme un label, puis à la fin de l
 Un commentaire commence par `;`. Il ne peut pas encore être placé la même ligne qu'une instruction.
 
 Commandes:
-  - `move <src><dest>` dest prend la valeur src
-  - `add <src><dest>` ajoute src dans dest 
-  - `sub <src><dest>` soustrait dest à src et le stock dans dest
-  - `cmp <arg1><arg2>` compare arg1 à arg2
+  - `move <src>,<dest>` dest prend la valeur src
+  - `add <src>,<dest>` ajoute src dans dest 
+  - `sub <src>,<dest>` soustrait dest à src et le stock dans dest
+  - `cmp <arg1>,<arg2>` compare arg1 à arg2
   - `jge <label>` saute au label indiqué si arg1 est plus grand ou égale à arg2
   - `jg <label>` saute au label indiqué si arg1 est plus grand à arg2
   - `jle <label>` saute au label indiqué si arg1 est plus petit ou égale à arg2
@@ -31,9 +31,9 @@ Commandes:
   - `print <src>` affiche le nombre stocké à l'emplacement src
   - `aski <src>` demande un entier à l'utilisateur et le stock dans src
   - `askc <src>` demande un caractère à l'utilisateur et le stock dans src
+  - `printc <src>` affiche le caractère stocké à l'emplacement src
+  - `prints <start>,<end>` affiche une série de caractères à l'emplacement start jusqu'à l'emplacement end
   - `rets` quitte le programme
-  
-Les commentaires ne sont pas encore supporés.
   
 Exemple d'un programme, la suite de Fibonacci:
 ``` 
